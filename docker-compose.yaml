@@ -60,7 +60,6 @@ services:
     image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./migrations/init:/docker-entrypoint-initdb.d
     expose:
       - "5432"
     networks:
@@ -91,28 +90,11 @@ services:
         "/kong-extra/kong.yaml",
       ]
 
-  fastapi-service:
-    build:
-      context: ./fastapi
-      dockerfile: Dockerfile
-    container_name: fastapi-service
-    restart: always
-    networks:
-      - ogna
-    expose:
-      - "8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    environment:
-      - ENVIRONMENT=production
-
 volumes:
   postgres_data:
   acme_storage:
 
 networks:
   ogna:
+    name: ogna
     driver: bridge
