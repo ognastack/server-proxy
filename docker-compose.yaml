@@ -38,7 +38,7 @@ services:
       KONG_LOG_LEVEL: ${KONG_LOG_LEVEL:-notice}
     depends_on:
       kong-bootstrap:
-        condition: service_completed_successfully # Start only after bootstrap has succeeded
+        condition: service_completed_successfully
       ogna-database:
         condition: service_healthy
     healthcheck:
@@ -54,7 +54,7 @@ services:
       - "443:8443"
     volumes:
       - ./config/kong.yaml:/kong/kong.yaml:ro
-      - ./acme:/usr/local/kong/acme # Your original approach - keep this!
+      - ./acme:/usr/local/kong/acme
     env_file:
       - .env
 
