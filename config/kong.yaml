@@ -1,0 +1,18 @@
+_format_version: "3.0"
+
+# Admin protection
+consumers:
+  - username: admin
+    keyauth_credentials:
+      - key: admin-key
+
+# Protect Kong's own Admin API via proxy
+services:
+  - name: admin-api
+    url: http://kong-cp:8001
+    routes:
+      - name: admin-api-route
+        paths:
+          - /admin
+    plugins:
+      - name: key-auth
