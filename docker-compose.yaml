@@ -23,6 +23,7 @@ services:
     image: kong/kong-gateway:3.12.0.0
     container_name: kong-cp
     restart: unless-stopped
+    user: root # Run as root to ensure certificate read permissions
     networks:
       - ogna
     environment:
@@ -52,8 +53,6 @@ services:
         condition: service_completed_successfully
       ogna-database:
         condition: service_healthy
-      certbot:
-        condition: service_started
     healthcheck:
       test: ["CMD", "kong", "health"]
       interval: 10s
@@ -67,16 +66,24 @@ services:
       - ./config/kong.yaml:/kong/kong.yaml:ro
       - ./acme:/usr/local/kong/acme
       - ./letsencrypt:/certs:ro
-      - ./logs:/var/log/kong # Persist logs
-    # Resource limits
-    deploy:
-      resources:
-        limits:
-          cpus: "2"
-          memory: 2G
-        reservations:
-          cpus: "0.5"
-          memory: 512M
+      - ./logs:/var/log/kong
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        # Wait for certificates to be ready
+        echo "Waiting for certificates..."
+        while [ ! -f /certs/.ready ]; do
+          sleep 2
+        done
+
+        # Verify certificates exist
+        if [ ! -f "/certs/live/$DOMAIN/fullchain.pem" ] || [ ! -f "/certs/live/$DOMAIN/privkey.pem" ]; then
+          echo "ERROR: Certificate files not found!"
+          exit 1
+        fi
+
+        echo "Certificates found, starting Kong..."
+        exec /docker-entrypoint.sh kong docker-start
     env_file:
       - .env
 
@@ -129,23 +136,40 @@ services:
       - ./letsencrypt:/etc/letsencrypt
       - ./certbot-logs:/var/log/letsencrypt
       - ./scripts:/scripts
-    environment:
-      - HETZNER_API_TOKEN=${HETZNER_API_TOKEN}
-      - DOMAIN=${DOMAIN}
-      - EMAIL=${EMAIL}
     entrypoint: /bin/sh
     command:
       - -c
       - |
-        certbot certonly \
-          --authenticator dns-hetzner \
-          --dns-hetzner-credentials /scripts/hetzner.ini \
-          -d "*.$DOMAIN" \
-          --email "$EMAIL" \
-          --agree-tos \
-          --non-interactive \
-          --keep-until-expiring
-        trap exit TERM
+        # Check if certificate already exists
+        if [ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
+          echo "Certificate already exists, checking if renewal needed..."
+          certbot renew \
+            --authenticator dns-hetzner \
+            --dns-hetzner-credentials /scripts/hetzner.ini \
+            --deploy-hook "touch /etc/letsencrypt/renewed"
+        else
+          echo "Obtaining new certificate..."
+          certbot certonly \
+            --authenticator dns-hetzner \
+            --dns-hetzner-credentials /scripts/hetzner.ini \
+            -d "*.$DOMAIN" \
+            --email "$EMAIL" \
+            --agree-tos \
+            --non-interactive
+        fi
+
+        # Signal that certificates are ready
+        touch /etc/letsencrypt/.ready
+
+        echo "Certbot initial run complete. Sleeping..."
+        # Keep container running for renewals
+        while true; do
+          sleep 12h
+          certbot renew \
+            --authenticator dns-hetzner \
+            --dns-hetzner-credentials /scripts/hetzner.ini \
+            --deploy-hook "touch /etc/letsencrypt/renewed"
+        done
     networks:
       - ogna
     restart: unless-stopped
@@ -168,10 +192,10 @@ services:
         done
         echo 'Watching for certificate renewals...'
         while true; do
-          inotifywait -e create,modify /certs/renewed 2>/dev/null
-          echo 'Certificate renewed, reloading Kong...'
-          curl -s -X POST http://kong-cp:8001/config?check_hash=1 > /dev/null
-          echo 'Kong reloaded successfully'
+          inotifywait -e create,modify /certs/renewed 2>/dev/null && \
+          echo 'Certificate renewed, reloading Kong...' && \
+          curl -s -X POST http://kong-cp:8001/config?check_hash=1 > /dev/null && \
+          echo 'Kong reloaded successfully' && \
           rm -f /certs/renewed
         done
     networks:
@@ -179,8 +203,6 @@ services:
     depends_on:
       kong-cp:
         condition: service_healthy
-      certbot:
-        condition: service_started
     restart: unless-stopped
     env_file:
       - .env
