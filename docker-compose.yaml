@@ -141,19 +141,11 @@ services:
           --authenticator dns-hetzner \
           --dns-hetzner-credentials /scripts/hetzner.ini \
           -d "*.$DOMAIN" \
-          -d "$DOMAIN" \
           --email "$EMAIL" \
           --agree-tos \
           --non-interactive \
           --keep-until-expiring
-
-        echo 'Certificates obtained successfully'
-
         trap exit TERM
-        while :; do
-          certbot renew --deploy-hook 'touch /etc/letsencrypt/renewed'
-          sleep 12h & wait $!
-        done
     networks:
       - ogna
     restart: unless-stopped
