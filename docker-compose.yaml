@@ -61,9 +61,7 @@ services:
       - "443:8443"
     volumes:
       - ./config/kong.yaml:/kong/kong.yaml:ro
-      - ./acme:/usr/local/kong/acme
-      - ./certs:/etc/letsencrypt:ro # shared bind mount
-      - ./logs:/var/log/kong
+      - ./certs:/etc/letsencrypt:ro
     deploy:
       resources:
         limits:
@@ -122,8 +120,7 @@ services:
     container_name: certbot
     restart: no
     volumes:
-      - ./certs:/etc/letsencrypt # shared with Kong
-      - ./certbot-logs:/var/log/letsencrypt
+      - ./certs:/etc/letsencrypt
       - ./scripts:/scripts
     command:
       - -c
@@ -132,7 +129,6 @@ services:
           --authenticator dns-hetzner \
           --dns-hetzner-credentials /scripts/hetzner.ini \
           -d "*.$DOMAIN" \
-          -d "$DOMAIN" \
           --email "$EMAIL" \
           --agree-tos \
           --non-interactive \
