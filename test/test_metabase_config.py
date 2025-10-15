@@ -2,8 +2,12 @@ import unittest
 import requests
 import os
 
-KONG_ADMIN_URL = "http://localhost"
+KONG_ADMIN_URL = "http://ognastack.com"
 KONG_ADMIN_KEY = os.getenv("KONG_ADMIN_KEY", "admin-key")
+
+APP_NAME = 'metabase'
+PORT_VALUE = 3000
+SERVER_HOST = 'ognastack.com'
 
 
 class TesApiHealth(unittest.TestCase):
@@ -11,7 +15,7 @@ class TesApiHealth(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures before each test method"""
 
-    def test_delete_crater_route(self):
+    def test_delete(self):
         """Verify can delete kong route and service"""
 
         headers = {
@@ -21,7 +25,7 @@ class TesApiHealth(unittest.TestCase):
 
         # 1. Delete the route first (routes must be deleted before the service)
         response = requests.delete(
-            f"{KONG_ADMIN_URL}/admin/routes/metabase",
+            f"{KONG_ADMIN_URL}/admin/routes/{APP_NAME}",
             headers=headers
         )
         print(f"Route deletion: {response.status_code}")
@@ -32,7 +36,7 @@ class TesApiHealth(unittest.TestCase):
 
         # 2. Delete the service
         response = requests.delete(
-            f"{KONG_ADMIN_URL}/admin/services/metabase",
+            f"{KONG_ADMIN_URL}/admin/services/{APP_NAME}",
             headers=headers
         )
         print(f"\nService deletion: {response.status_code}")
@@ -41,7 +45,8 @@ class TesApiHealth(unittest.TestCase):
         else:
             print(response.json())
 
-    def test_add_crater_route(self):
+
+    def test_add(self):
         """Verify can add kong path with hostname-based route"""
 
         headers = {
@@ -51,10 +56,9 @@ class TesApiHealth(unittest.TestCase):
 
         # 1. Create the FastAPI service
         service_data = {
-            "name": "metabase",
-            "url": "http://metabase:3000"
+            "name": APP_NAME,
+            "url": f"http://{APP_NAME}:{PORT_VALUE}"
         }
-
 
         response = requests.post(
             f"{KONG_ADMIN_URL}/admin/services",
@@ -66,14 +70,14 @@ class TesApiHealth(unittest.TestCase):
 
         # 2. Create a route for the service based on the Host header
         route_data = {
-            "name": "metabase",
-            "hosts": ["metabase.user.localhost"],  # 👈 match based on host
+            "name": f"{APP_NAME}-route",
+            "hosts": [f"{APP_NAME}.user.{SERVER_HOST}"],  # 👈 match based on host
             "strip_path": True,
             "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
         }
 
         response = requests.post(
-            f"{KONG_ADMIN_URL}/admin/services/metabase/routes",
+            f"{KONG_ADMIN_URL}/admin/services/n8n/routes",
             json=route_data,
             headers=headers
         )
@@ -81,7 +85,7 @@ class TesApiHealth(unittest.TestCase):
         print(response.json())
 
     def test_api_call(self):
-        health = requests.get("http://crater.user.localhost")
+        health = requests.get(f"http://{APP_NAME}.user.{SERVER_HOST}/signin")
         print(health.content)
         self.assertIn(health.status_code, [200, 201])
 

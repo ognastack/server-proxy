@@ -1,0 +1,332 @@
+2025-10-15 11:00:13,482:DEBUG:certbot._internal.main:certbot version: 5.1.0
+2025-10-15 11:00:13,482:DEBUG:certbot._internal.main:Location of certbot entry point: /usr/local/bin/certbot
+2025-10-15 11:00:13,482:DEBUG:certbot._internal.main:Arguments: ['--authenticator', 'dns-hetzner', '--dns-hetzner-credentials', '/scripts/hetzner.ini', '-d', '*.yourdomain.com', '-d', 'yourdomain.com', '--email', 'admin@yourdomain.com', '--agree-tos', '--non-interactive', '--keep-until-expiring']
+2025-10-15 11:00:13,482:DEBUG:certbot._internal.main:Discovered plugins: PluginsRegistry(PluginEntryPoint#dns-hetzner,PluginEntryPoint#manual,PluginEntryPoint#null,PluginEntryPoint#standalone,PluginEntryPoint#webroot)
+2025-10-15 11:00:13,538:DEBUG:certbot._internal.log:Root logging level set at 30
+2025-10-15 11:00:13,539:DEBUG:certbot._internal.plugins.selection:Requested authenticator dns-hetzner and installer None
+2025-10-15 11:00:13,539:DEBUG:certbot._internal.plugins.selection:Single candidate plugin: * dns-hetzner
+Description: Obtain certificates using a DNS TXT record (if you are using Hetzner for DNS).
+Interfaces: Authenticator, Plugin
+Entry point: EntryPoint(name='dns-hetzner', value='certbot_dns_hetzner.dns_hetzner:Authenticator', group='certbot.plugins')
+Initialized: <certbot_dns_hetzner.dns_hetzner.Authenticator object at 0xffff8870c110>
+Prep: True
+2025-10-15 11:00:13,539:DEBUG:certbot._internal.plugins.selection:Selected authenticator <certbot_dns_hetzner.dns_hetzner.Authenticator object at 0xffff8870c110> and installer None
+2025-10-15 11:00:13,539:INFO:certbot._internal.plugins.selection:Plugins selected: Authenticator dns-hetzner, Installer None
+2025-10-15 11:00:13,577:DEBUG:certbot._internal.main:Picked account: <Account(RegistrationResource(body=Registration(key=None, contact=(), agreement=None, status=None, terms_of_service_agreed=None, only_return_existing=None, external_account_binding=None), uri='https://acme-v02.api.letsencrypt.org/acme/acct/2727320671', new_authzr_uri=None, terms_of_service=None), 3b0eb5202540faa668ee2f89a375e7f8, Meta(creation_dt=datetime.datetime(2025, 10, 15, 10, 58, 35, tzinfo=datetime.timezone.utc), creation_host='af40c0610542', register_to_eff=None))>
+2025-10-15 11:00:13,577:DEBUG:acme.client:Sending GET request to https://acme-v02.api.letsencrypt.org/directory.
+2025-10-15 11:00:13,578:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): acme-v02.api.letsencrypt.org:443
+2025-10-15 11:00:13,902:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "GET /directory HTTP/1.1" 200 1065
+2025-10-15 11:00:13,904:DEBUG:acme.client:Received response:
+HTTP 200
+Server: nginx
+Date: Wed, 15 Oct 2025 11:00:13 GMT
+Content-Type: application/json
+Content-Length: 1065
+Connection: keep-alive
+Cache-Control: public, max-age=0, no-cache
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=604800
+
+{
+  "IAaupc3RCgQ": "https://community.letsencrypt.org/t/adding-random-entries-to-the-directory/33417",
+  "keyChange": "https://acme-v02.api.letsencrypt.org/acme/key-change",
+  "meta": {
+    "caaIdentities": [
+      "letsencrypt.org"
+    ],
+    "profiles": {
+      "classic": "https://letsencrypt.org/docs/profiles#classic",
+      "shortlived": "https://letsencrypt.org/docs/profiles#shortlived (not yet generally available)",
+      "tlsclient": "https://letsencrypt.org/docs/profiles#tlsclient",
+      "tlsserver": "https://letsencrypt.org/docs/profiles#tlsserver"
+    },
+    "termsOfService": "https://letsencrypt.org/documents/LE-SA-v1.5-February-24-2025.pdf",
+    "website": "https://letsencrypt.org"
+  },
+  "newAccount": "https://acme-v02.api.letsencrypt.org/acme/new-acct",
+  "newNonce": "https://acme-v02.api.letsencrypt.org/acme/new-nonce",
+  "newOrder": "https://acme-v02.api.letsencrypt.org/acme/new-order",
+  "renewalInfo": "https://acme-v02.api.letsencrypt.org/acme/renewal-info",
+  "revokeCert": "https://acme-v02.api.letsencrypt.org/acme/revoke-cert"
+}
+2025-10-15 11:00:13,907:DEBUG:certbot._internal.display.obj:Notifying user: Requesting a certificate for *.yourdomain.com and yourdomain.com
+2025-10-15 11:00:13,910:DEBUG:acme.client:Requesting fresh nonce
+2025-10-15 11:00:13,910:DEBUG:acme.client:Sending HEAD request to https://acme-v02.api.letsencrypt.org/acme/new-nonce.
+2025-10-15 11:00:14,013:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "HEAD /acme/new-nonce HTTP/1.1" 200 0
+2025-10-15 11:00:14,014:DEBUG:acme.client:Received response:
+HTTP 200
+Server: nginx
+Date: Wed, 15 Oct 2025 11:00:14 GMT
+Connection: keep-alive
+Cache-Control: public, max-age=0, no-cache
+Link: <https://acme-v02.api.letsencrypt.org/directory>;rel="index"
+Replay-Nonce: D3QZ_ywxc2VgG9EMmzmOQE0sWyWBFn__SnmASQSkc2QQ7KbemYY
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=604800
+
+
+2025-10-15 11:00:14,015:DEBUG:acme.client:Storing nonce: D3QZ_ywxc2VgG9EMmzmOQE0sWyWBFn__SnmASQSkc2QQ7KbemYY
+2025-10-15 11:00:14,015:DEBUG:acme.client:JWS payload:
+b'{\n  "identifiers": [\n    {\n      "type": "dns",\n      "value": "*.yourdomain.com"\n    },\n    {\n      "type": "dns",\n      "value": "yourdomain.com"\n    }\n  ]\n}'
+2025-10-15 11:00:14,019:DEBUG:acme.client:Sending POST request to https://acme-v02.api.letsencrypt.org/acme/new-order:
+{
+  "protected": "eyJhbGciOiAiUlMyNTYiLCAia2lkIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL2FjY3QvMjcyNzMyMDY3MSIsICJub25jZSI6ICJEM1FaX3l3eGMyVmdHOUVNbXptT1FFMHNXeVdCRm5fX1NubUFTUVNrYzJRUTdLYmVtWVkiLCAidXJsIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL25ldy1vcmRlciJ9",
+  "signature": "igspCwd4Fsef0536_XOJgyIbzYCKKY5WrrIRiemgXqTAUdXKeB0JJC73NnZ71rnkTW-pZa3KWxDWA7RReUHPt6GtdVd5CSAHq7fS9Bt9wLw9i6t2U9ZOYlAMkpxqB_ONc1T-8zzTl1a_XZ2piByNKMDgv8MGCZtnvs_g3_HxAYVzFy4PFgfHF-O_H2VmhEbNq0HCsk4-037JiTFf4TzfGpjwvvUAAjtQPLhqaSBlOL3oqpEMgazs-386oJwfDyqnyQlWxtSoFq-XqNNTs7ADwYgmpZyJ_hR_ksPyp0CMvklWWqifhStrOngSWBPAtT7BO4Lf5XLssVN1WlJFDH4uiA",
+  "payload": "ewogICJpZGVudGlmaWVycyI6IFsKICAgIHsKICAgICAgInR5cGUiOiAiZG5zIiwKICAgICAgInZhbHVlIjogIioueW91cmRvbWFpbi5jb20iCiAgICB9LAogICAgewogICAgICAidHlwZSI6ICJkbnMiLAogICAgICAidmFsdWUiOiAieW91cmRvbWFpbi5jb20iCiAgICB9CiAgXQp9"
+}
+2025-10-15 11:00:14,184:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "POST /acme/new-order HTTP/1.1" 201 495
+2025-10-15 11:00:14,185:DEBUG:acme.client:Received response:
+HTTP 201
+Server: nginx
+Date: Wed, 15 Oct 2025 11:00:14 GMT
+Content-Type: application/json
+Content-Length: 495
+Connection: keep-alive
+Boulder-Requester: 2727320671
+Cache-Control: public, max-age=0, no-cache
+Link: <https://acme-v02.api.letsencrypt.org/directory>;rel="index"
+Location: https://acme-v02.api.letsencrypt.org/acme/order/2727320671/438238429901
+Replay-Nonce: D3QZ_ywxxcBRD1KKdAzdZnHrqcd2oTxg3r56Y5O1G1tDeG3Iq4Q
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=604800
+
+{
+  "status": "pending",
+  "expires": "2025-10-22T11:00:14Z",
+  "identifiers": [
+    {
+      "type": "dns",
+      "value": "*.yourdomain.com"
+    },
+    {
+      "type": "dns",
+      "value": "yourdomain.com"
+    }
+  ],
+  "authorizations": [
+    "https://acme-v02.api.letsencrypt.org/acme/authz/2727320671/598087688871",
+    "https://acme-v02.api.letsencrypt.org/acme/authz/2727320671/598087688891"
+  ],
+  "finalize": "https://acme-v02.api.letsencrypt.org/acme/finalize/2727320671/438238429901"
+}
+2025-10-15 11:00:14,186:DEBUG:acme.client:Storing nonce: D3QZ_ywxxcBRD1KKdAzdZnHrqcd2oTxg3r56Y5O1G1tDeG3Iq4Q
+2025-10-15 11:00:14,186:DEBUG:acme.client:JWS payload:
+b''
+2025-10-15 11:00:14,189:DEBUG:acme.client:Sending POST request to https://acme-v02.api.letsencrypt.org/acme/authz/2727320671/598087688871:
+{
+  "protected": "eyJhbGciOiAiUlMyNTYiLCAia2lkIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL2FjY3QvMjcyNzMyMDY3MSIsICJub25jZSI6ICJEM1FaX3l3eHhjQlJEMUtLZEF6ZFpuSHJxY2Qyb1R4ZzNyNTZZNU8xRzF0RGVHM0lxNFEiLCAidXJsIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL2F1dGh6LzI3MjczMjA2NzEvNTk4MDg3Njg4ODcxIn0",
+  "signature": "iVRLwttP_D13BcmtAoODMlHz-VP2B-bGNsfawUMtWNWMp8ZBrI9tHzlXypFZvIdnjhskWJbpetaZXfU7Z1mfmb6f_ngwM5DvNk6GDMV9a8ugzA79vK8K3Ot1d4XdDCG9zKFdcwo6b-55ECRREXWlLC4KQDKsurV1qO1IO6xCs_etjs7EgiZWHd4Aj7eVLShlyNWGVP8vK4Pre7LnCspiyiTwtUfA-SXGArdOWT7NlM0Uhk9v1AsobUYfLlgNVx29SglH1EB8S9cSFm8NS2cbNUqNnN8mh3I0AiKOKycsDn_6dbUhX5wDve-rpzDEKPUMDRsXz-aXmnJ137Rzzl514w",
+  "payload": ""
+}
+2025-10-15 11:00:14,297:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "POST /acme/authz/2727320671/598087688871 HTTP/1.1" 200 396
+2025-10-15 11:00:14,298:DEBUG:acme.client:Received response:
+HTTP 200
+Server: nginx
+Date: Wed, 15 Oct 2025 11:00:14 GMT
+Content-Type: application/json
+Content-Length: 396
+Connection: keep-alive
+Boulder-Requester: 2727320671
+Cache-Control: public, max-age=0, no-cache
+Link: <https://acme-v02.api.letsencrypt.org/directory>;rel="index"
+Replay-Nonce: D3QZ_ywxWKfYqmqk3cSGl2WJFPEx24hHAAvLl_0S0tOPLPZyv-0
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=604800
+
+{
+  "identifier": {
+    "type": "dns",
+    "value": "yourdomain.com"
+  },
+  "status": "pending",
+  "expires": "2025-10-22T11:00:14Z",
+  "challenges": [
+    {
+      "type": "dns-01",
+      "url": "https://acme-v02.api.letsencrypt.org/acme/chall/2727320671/598087688871/Pgu_sQ",
+      "status": "pending",
+      "token": "5tbcKlzLdrVTMrynjpXTW5JnXuoecKZihXFyegBK6LA"
+    }
+  ],
+  "wildcard": true
+}
+2025-10-15 11:00:14,299:DEBUG:acme.client:Storing nonce: D3QZ_ywxWKfYqmqk3cSGl2WJFPEx24hHAAvLl_0S0tOPLPZyv-0
+2025-10-15 11:00:14,299:DEBUG:acme.client:JWS payload:
+b''
+2025-10-15 11:00:14,302:DEBUG:acme.client:Sending POST request to https://acme-v02.api.letsencrypt.org/acme/authz/2727320671/598087688891:
+{
+  "protected": "eyJhbGciOiAiUlMyNTYiLCAia2lkIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL2FjY3QvMjcyNzMyMDY3MSIsICJub25jZSI6ICJEM1FaX3l3eFdLZllxbXFrM2NTR2wyV0pGUEV4MjRoSEFBdkxsXzBTMHRPUExQWnl2LTAiLCAidXJsIjogImh0dHBzOi8vYWNtZS12MDIuYXBpLmxldHNlbmNyeXB0Lm9yZy9hY21lL2F1dGh6LzI3MjczMjA2NzEvNTk4MDg3Njg4ODkxIn0",
+  "signature": "ccaA8ojSF1Wi9hjPciI9UdXb1zqUrzJD1o87DeTr7Y8OLwYFWFsnHEjFacBwxARPYvPhqKbNLNczfhXdOQZg_K90gzhtxWPZFFK2JhhGooVcj5x1d0JX23Y_ooFVmR6KXxLMJpzpY4b9VRnO-CXDbOxSmu2FH9vC5X6Ou68NjKXs2FjIY5mVtZ3-rWNeN4xW57teYHphWlirfeAhBxGCvGI83KhNTeFhAr33zRQjovmZHfY-nWthg3zKGfYkSFaHkQsd9EECEf6ZIHTw43OMkVO-RLj93Fj0XUSAu6kh6gATJ_4lDnn1tb2i_mJd7SfQs0rc6aEX9GbRjY6pTypKDA",
+  "payload": ""
+}
+2025-10-15 11:00:14,409:DEBUG:urllib3.connectionpool:https://acme-v02.api.letsencrypt.org:443 "POST /acme/authz/2727320671/598087688891 HTTP/1.1" 200 822
+2025-10-15 11:00:14,411:DEBUG:acme.client:Received response:
+HTTP 200
+Server: nginx
+Date: Wed, 15 Oct 2025 11:00:14 GMT
+Content-Type: application/json
+Content-Length: 822
+Connection: keep-alive
+Boulder-Requester: 2727320671
+Cache-Control: public, max-age=0, no-cache
+Link: <https://acme-v02.api.letsencrypt.org/directory>;rel="index"
+Replay-Nonce: D3QZ_ywxKaVwUMwjNej43hmAia4w3m38qRPS3AcZGVF7kngKjVs
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=604800
+
+{
+  "identifier": {
+    "type": "dns",
+    "value": "yourdomain.com"
+  },
+  "status": "pending",
+  "expires": "2025-10-22T11:00:14Z",
+  "challenges": [
+    {
+      "type": "tls-alpn-01",
+      "url": "https://acme-v02.api.letsencrypt.org/acme/chall/2727320671/598087688891/e2QRlQ",
+      "status": "pending",
+      "token": "IXpMjNBDNj_8o-erWIXoS3u8G_Y6bqVy75uBZ9-j5-4"
+    },
+    {
+      "type": "http-01",
+      "url": "https://acme-v02.api.letsencrypt.org/acme/chall/2727320671/598087688891/aYuW4A",
+      "status": "pending",
+      "token": "IXpMjNBDNj_8o-erWIXoS3u8G_Y6bqVy75uBZ9-j5-4"
+    },
+    {
+      "type": "dns-01",
+      "url": "https://acme-v02.api.letsencrypt.org/acme/chall/2727320671/598087688891/Q6WBAQ",
+      "status": "pending",
+      "token": "IXpMjNBDNj_8o-erWIXoS3u8G_Y6bqVy75uBZ9-j5-4"
+    }
+  ]
+}
+2025-10-15 11:00:14,411:DEBUG:acme.client:Storing nonce: D3QZ_ywxKaVwUMwjNej43hmAia4w3m38qRPS3AcZGVF7kngKjVs
+2025-10-15 11:00:14,412:DEBUG:acme.challenges:tls-alpn-01 was not recognized, full message: {'type': 'tls-alpn-01', 'url': 'https://acme-v02.api.letsencrypt.org/acme/chall/2727320671/598087688891/e2QRlQ', 'status': 'pending', 'token': 'IXpMjNBDNj_8o-erWIXoS3u8G_Y6bqVy75uBZ9-j5-4'}
+2025-10-15 11:00:14,413:INFO:certbot._internal.auth_handler:Performing the following challenges:
+2025-10-15 11:00:14,413:INFO:certbot._internal.auth_handler:dns-01 challenge for yourdomain.com
+2025-10-15 11:00:14,414:INFO:certbot._internal.auth_handler:dns-01 challenge for yourdomain.com
+2025-10-15 11:00:14,415:WARNING:certbot.plugins.dns_common:Unsafe permissions on credentials configuration file: /scripts/hetzner.ini
+2025-10-15 11:00:14,422:DEBUG:filelock:Attempting to acquire lock 281472970812272 on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:14,422:DEBUG:filelock:Lock 281472970812272 acquired on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:14,423:DEBUG:filelock:Attempting to acquire lock 281472954341840 on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:14,424:DEBUG:filelock:Lock 281472954341840 acquired on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:14,424:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): publicsuffix.org:443
+2025-10-15 11:00:14,661:DEBUG:urllib3.connectionpool:https://publicsuffix.org:443 "GET /list/public_suffix_list.dat HTTP/1.1" 200 88104
+2025-10-15 11:00:14,832:DEBUG:filelock:Attempting to release lock 281472954341840 on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:14,832:DEBUG:filelock:Lock 281472954341840 released on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:14,846:DEBUG:filelock:Attempting to release lock 281472970812272 on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:14,846:DEBUG:filelock:Lock 281472970812272 released on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:14,911:DEBUG:root:Parameter resolve_zone_name is not set, use tldextract to guess the zone name from known TLDs
+2025-10-15 11:00:14,912:DEBUG:filelock:Attempting to acquire lock 281472953675760 on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:14,912:DEBUG:filelock:Lock 281472953675760 acquired on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:14,912:DEBUG:filelock:Attempting to acquire lock 281472962982112 on /root/.lexicon_tld_set/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:14,912:DEBUG:filelock:Lock 281472962982112 acquired on /root/.lexicon_tld_set/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:14,913:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): publicsuffix.org:443
+2025-10-15 11:00:14,990:DEBUG:urllib3.connectionpool:https://publicsuffix.org:443 "GET /list/public_suffix_list.dat HTTP/1.1" 200 88109
+2025-10-15 11:00:15,045:DEBUG:filelock:Attempting to release lock 281472962982112 on /root/.lexicon_tld_set/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:15,045:DEBUG:filelock:Lock 281472962982112 released on /root/.lexicon_tld_set/urls/62bf135d1c2f3d4db4228b9ecaf507a2.tldextract.json.lock
+2025-10-15 11:00:15,054:DEBUG:filelock:Attempting to release lock 281472953675760 on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:15,054:DEBUG:filelock:Lock 281472953675760 released on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:15,070:DEBUG:root:Actual zone name resolved for domain yourdomain.com: yourdomain.com
+2025-10-15 11:00:15,073:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): dns.hetzner.com:443
+2025-10-15 11:00:17,307:DEBUG:urllib3.connectionpool:https://dns.hetzner.com:443 "GET /api/v1/zones?name=yourdomain.com HTTP/1.1" 401 48
+2025-10-15 11:00:17,312:DEBUG:certbot._internal.error_handler:Encountered exception:
+Traceback (most recent call last):
+  File "/opt/certbot/src/certbot/src/certbot/_internal/auth_handler.py", line 84, in handle_authorizations
+    resps = self.auth.perform(achalls)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/plugins/dns_common.py", line 78, in perform
+    self._perform(domain, validation_domain_name, validation)
+  File "/usr/local/lib/python3.12/site-packages/certbot_dns_hetzner/dns_hetzner.py", line 52, in _perform
+    with self._get_hetzner_client(domain) as client:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/client.py", line 169, in __enter__
+    raise e
+  File "/usr/local/lib/python3.12/site-packages/lexicon/client.py", line 162, in __enter__
+    provider.authenticate()
+  File "/usr/local/lib/python3.12/site-packages/lexicon/_private/providers/hetzner.py", line 39, in authenticate
+    provider = self._get_zone_by_domain(self.domain)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/_private/providers/hetzner.py", line 179, in _get_zone_by_domain
+    payload = self._get("/zones", filter_obj)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/interfaces.py", line 163, in _get
+    return self._request("GET", url, query_params=query_params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/_private/providers/hetzner.py", line 164, in _request
+    response.raise_for_status()
+  File "/usr/local/lib/python3.12/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://dns.hetzner.com/api/v1/zones?name=yourdomain.com
+
+2025-10-15 11:00:17,312:DEBUG:certbot._internal.error_handler:Calling registered functions
+2025-10-15 11:00:17,313:INFO:certbot._internal.auth_handler:Cleaning up challenges
+2025-10-15 11:00:17,314:DEBUG:filelock:Attempting to acquire lock 281472954341984 on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,314:DEBUG:filelock:Lock 281472954341984 acquired on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,317:DEBUG:filelock:Attempting to release lock 281472954341984 on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,317:DEBUG:filelock:Lock 281472954341984 released on /root/.cache/python-tldextract/3.12.10.final__local__ecb11d__tldextract-5.3.0/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,369:DEBUG:root:Parameter resolve_zone_name is not set, use tldextract to guess the zone name from known TLDs
+2025-10-15 11:00:17,369:DEBUG:filelock:Attempting to acquire lock 281472972999808 on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,369:DEBUG:filelock:Lock 281472972999808 acquired on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,370:DEBUG:filelock:Attempting to release lock 281472972999808 on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,370:DEBUG:filelock:Lock 281472972999808 released on /root/.lexicon_tld_set/publicsuffix.org-tlds/de84b5ca2167d4c83e38fb162f2e8738.tldextract.json.lock
+2025-10-15 11:00:17,390:DEBUG:root:Actual zone name resolved for domain yourdomain.com: yourdomain.com
+2025-10-15 11:00:17,392:DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): dns.hetzner.com:443
+2025-10-15 11:00:17,944:DEBUG:urllib3.connectionpool:https://dns.hetzner.com:443 "GET /api/v1/zones?name=yourdomain.com HTTP/1.1" 401 48
+2025-10-15 11:00:17,946:ERROR:certbot._internal.error_handler:Encountered exception during recovery: requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://dns.hetzner.com/api/v1/zones?name=yourdomain.com
+2025-10-15 11:00:17,951:DEBUG:certbot._internal.log:Exiting abnormally:
+Traceback (most recent call last):
+  File "/usr/local/bin/certbot", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/main.py", line 18, in main
+    return internal_main.main(cli_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/_internal/main.py", line 1850, in main
+    return config.func(config, plugins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/_internal/main.py", line 1562, in certonly
+    lineage = _get_and_save_cert(le_client, config, domains, certname, lineage)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/_internal/main.py", line 141, in _get_and_save_cert
+    lineage = le_client.obtain_and_enroll_certificate(domains, certname)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/_internal/client.py", line 526, in obtain_and_enroll_certificate
+    cert, chain, key, _ = self.obtain_certificate(domains)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/_internal/client.py", line 427, in obtain_certificate
+    orderr = self._get_order_and_authorizations(csr.data, self.config.allow_subset_of_names)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/_internal/client.py", line 505, in _get_order_and_authorizations
+    authzr = self.auth_handler.handle_authorizations(orderr, self.config, best_effort)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/_internal/auth_handler.py", line 84, in handle_authorizations
+    resps = self.auth.perform(achalls)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/certbot/src/certbot/src/certbot/plugins/dns_common.py", line 78, in perform
+    self._perform(domain, validation_domain_name, validation)
+  File "/usr/local/lib/python3.12/site-packages/certbot_dns_hetzner/dns_hetzner.py", line 52, in _perform
+    with self._get_hetzner_client(domain) as client:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/client.py", line 169, in __enter__
+    raise e
+  File "/usr/local/lib/python3.12/site-packages/lexicon/client.py", line 162, in __enter__
+    provider.authenticate()
+  File "/usr/local/lib/python3.12/site-packages/lexicon/_private/providers/hetzner.py", line 39, in authenticate
+    provider = self._get_zone_by_domain(self.domain)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/_private/providers/hetzner.py", line 179, in _get_zone_by_domain
+    payload = self._get("/zones", filter_obj)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/interfaces.py", line 163, in _get
+    return self._request("GET", url, query_params=query_params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/lexicon/_private/providers/hetzner.py", line 164, in _request
+    response.raise_for_status()
+  File "/usr/local/lib/python3.12/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://dns.hetzner.com/api/v1/zones?name=yourdomain.com
+2025-10-15 11:00:17,955:ERROR:certbot._internal.log:An unexpected error occurred:
+2025-10-15 11:00:17,955:ERROR:certbot._internal.log:requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://dns.hetzner.com/api/v1/zones?name=yourdomain.com
