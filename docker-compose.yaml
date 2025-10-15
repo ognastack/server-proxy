@@ -157,6 +157,8 @@ services:
     networks:
       - ogna
     restart: unless-stopped
+    env_file:
+      - .env
 
   cert-watcher:
     image: alpine:latest
@@ -188,6 +190,8 @@ services:
       certbot:
         condition: service_started
     restart: unless-stopped
+    env_file:
+      - .env
 
 volumes:
   postgres_data:
