@@ -17,7 +17,7 @@ services:
     restart: on-failure
     environment:
       <<: *kong-env
-    command: kong migrations bootstrap # Run DB migrations to initialize Kong schema
+    command: kong migrations bootstrap
 
   kong-cp:
     image: kong/kong-gateway:3.12.0.0
@@ -62,7 +62,7 @@ services:
     volumes:
       - ./config/kong.yaml:/kong/kong.yaml:ro
       - ./acme:/usr/local/kong/acme
-      - certs:/etc/letsencrypt:ro
+      - ./certs:/etc/letsencrypt:ro # shared bind mount
       - ./logs:/var/log/kong
     deploy:
       resources:
@@ -120,8 +120,9 @@ services:
       context: ./certbot
       dockerfile: Dockerfile
     container_name: certbot
+    restart: no
     volumes:
-      - certs:/etc/letsencrypt
+      - ./certs:/etc/letsencrypt # shared with Kong
       - ./certbot-logs:/var/log/letsencrypt
       - ./scripts:/scripts
     command:
@@ -139,41 +140,33 @@ services:
     env_file:
       - .env
 
-  cert-watcher:
-    image: alpine:latest
-    container_name: cert-watcher
+  certbot-renew:
+    image: certbot/dns-hetzner:latest
+    container_name: certbot-renew
+    restart: unless-stopped
     volumes:
-      - certs:/etc/letsencrypt:ro
+      - ./certs:/etc/letsencrypt
+      - ./certbot-logs:/var/log/letsencrypt
+      - ./scripts:/scripts
     entrypoint: /bin/sh
-    command:
-      - -c
-      - |
-        apk add --no-cache inotify-tools curl
-        echo 'Waiting for Kong to be ready...'
-        until curl -s http://kong-cp:8001/status > /dev/null 2>&1; do
-          sleep 2
-        done
-        echo 'Watching for certificate renewals...'
+    command: >
+      -c "
         while true; do
-          inotifywait -e create,modify /etc/letsencrypt/renewed 2>/dev/null && \
-          echo 'Certificate renewed, reloading Kong...' && \
-          curl -s -X POST http://kong-cp:8001/config?check_hash=1 > /dev/null && \
-          echo 'Kong reloaded successfully' && \
-          rm -f /etc/letsencrypt/renewed
+          echo 'Running certbot renew...';
+          certbot renew --dns-hetzner-credentials /scripts/hetzner.ini --quiet --deploy-hook 'curl -s -X POST http://kong-cp:8001/config?check_hash=1';
+          sleep 12h;
         done
+      "
     networks:
       - ogna
     depends_on:
       kong-cp:
         condition: service_healthy
-    restart: unless-stopped
     env_file:
       - .env
 
 volumes:
   postgres_data:
-    driver: local
-  certs:
     driver: local
 
 networks:
