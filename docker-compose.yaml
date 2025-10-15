@@ -140,31 +140,6 @@ services:
     env_file:
       - .env
 
-  certbot-renew:
-    image: certbot/dns-hetzner:latest
-    container_name: certbot-renew
-    restart: unless-stopped
-    volumes:
-      - ./certs:/etc/letsencrypt
-      - ./certbot-logs:/var/log/letsencrypt
-      - ./scripts:/scripts
-    entrypoint: /bin/sh
-    command: >
-      -c "
-        while true; do
-          echo 'Running certbot renew...';
-          certbot renew --dns-hetzner-credentials /scripts/hetzner.ini --quiet --deploy-hook 'curl -s -X POST http://kong-cp:8001/config?check_hash=1';
-          sleep 12h;
-        done
-      "
-    networks:
-      - ogna
-    depends_on:
-      kong-cp:
-        condition: service_healthy
-    env_file:
-      - .env
-
 volumes:
   postgres_data:
     driver: local
