@@ -126,15 +126,18 @@ services:
       - ./certbot-logs:/var/log/letsencrypt
       - ./scripts:/scripts
     command:
-      - certonly
-      - --authenticator=dns-hetzner
-      - --dns-hetzner-credentials=/scripts/hetzner.ini
-      - -d
-      - "*.${DOMAIN}"
-      - --email=${EMAIL}
-      - --agree-tos
-      - --non-interactive
-      - --keep-until-expiring
+      - -c
+      - |
+        certbot certonly \
+          --authenticator dns-hetzner \
+          --dns-hetzner-credentials /scripts/hetzner.ini \
+          -d "*.$DOMAIN" \
+          -d "$DOMAIN" \
+          --email "$EMAIL" \
+          --agree-tos \
+          --non-interactive \
+          --keep-until-expiring
+        trap exit TERM
     networks:
       - ogna
     env_file:
