@@ -2,7 +2,7 @@ import unittest
 import requests
 import os
 
-KONG_ADMIN_URL = "https://ognastack.com"
+KONG_ADMIN_URL = "http://ognastack.com"
 KONG_ADMIN_KEY = os.getenv("KONG_ADMIN_KEY", "admin-key")
 
 APP_NAME = 'n8n'
@@ -77,7 +77,7 @@ class TesApiHealth(unittest.TestCase):
         }
 
         response = requests.post(
-            f"{KONG_ADMIN_URL}/admin/services/n8n/routes",
+            f"{KONG_ADMIN_URL}/admin/services/{APP_NAME}/routes",
             json=route_data,
             headers=headers
         )
