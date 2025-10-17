@@ -31,8 +31,6 @@ services:
       KONG_LUA_SSL_TRUSTED_CERTIFICATE: system
       KONG_NGINX_HTTP_LUA_SHARED_DICT: acme_storage 10m
       KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
-      KONG_HEADERS: "off"
-      KONG_SERVER_TOKENS: "off"
       KONG_NGINX_WORKER_PROCESSES: ${KONG_WORKER_PROCESSES:-auto}
       KONG_NGINX_WORKER_CONNECTIONS: ${KONG_WORKER_CONNECTIONS:-4096}
       KONG_PROXY_ACCESS_LOG: /dev/stdout
@@ -51,6 +49,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 30s
+    expose:
+      - "8001"
     ports:
       - "80:8000"
       - "443:8443"

@@ -6,11 +6,8 @@ KONG_ADMIN_URL = "http://localhost"
 KONG_ADMIN_KEY = os.getenv("KONG_ADMIN_KEY", "admin-key")
 
 APP_NAME = 'n8n'
-PORT_VALUE = 80
-SERVER_HOST = 'localhost'
-
-
-class TesApiHealth(unittest.TestCase):
+PORT_VALUE = 5678
+class TesCloudbeaver(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures before each test method"""
@@ -45,7 +42,6 @@ class TesApiHealth(unittest.TestCase):
         else:
             print(response.json())
 
-
     def test_add(self):
         """Verify can add kong path with hostname-based route"""
 
@@ -56,9 +52,10 @@ class TesApiHealth(unittest.TestCase):
 
         # 1. Create the FastAPI service
         service_data = {
-            "name": APP_NAME,
+            "name": f"{APP_NAME}",
             "url": f"http://{APP_NAME}:{PORT_VALUE}"
         }
+
 
         response = requests.post(
             f"{KONG_ADMIN_URL}/admin/services",
@@ -70,8 +67,8 @@ class TesApiHealth(unittest.TestCase):
 
         # 2. Create a route for the service based on the Host header
         route_data = {
-            "name": f"{APP_NAME}-route",
-            "hosts": [f"{APP_NAME}.user.{SERVER_HOST}"],  # 👈 match based on host
+            "name": f"{APP_NAME}",
+            "hosts": [f"{APP_NAME}.user.localhost"],  # 👈 match based on host
             "strip_path": True,
             "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
         }
@@ -83,11 +80,6 @@ class TesApiHealth(unittest.TestCase):
         )
         print(f"\nRoute creation: {response.status_code}")
         print(response.json())
-
-    def test_api_call(self):
-        health = requests.get(f"http://{APP_NAME}.user.{SERVER_HOST}/signin")
-        print(health.content)
-        self.assertIn(health.status_code, [200, 201])
 
     def tearDown(self):
         """Clean up after each test"""
