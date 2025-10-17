@@ -1,0 +1,31 @@
+services:
+  certbot:
+    build:
+      context: ./certbot
+      dockerfile: Dockerfile
+    container_name: certbot
+    restart: no
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - ./scripts:/scripts
+    command:
+      - -c
+      - |
+        certbot certonly \
+          --authenticator dns-hetzner \
+          --dns-hetzner-credentials /scripts/hetzner.ini \
+          -d "*.$DOMAIN" \
+          -d "$DOMAIN" \
+          --email "$EMAIL" \
+          --agree-tos \
+          --non-interactive \
+          --keep-until-expiring
+        trap exit TERM
+    networks:
+      - ogna
+    env_file:
+      - .env
+networks:
+  ogna:
+    name: ogna
+    driver: bridge
