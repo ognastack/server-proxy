@@ -2,12 +2,12 @@ import unittest
 import requests
 import os
 
-KONG_ADMIN_URL = "http://ognastack.com"
+KONG_ADMIN_URL = "http://localhost"
 KONG_ADMIN_KEY = os.getenv("KONG_ADMIN_KEY", "admin-key")
 
 APP_NAME = 'n8n'
 PORT_VALUE = 80
-SERVER_HOST = 'ognastack.com'
+SERVER_HOST = 'localhost'
 
 
 class TesApiHealth(unittest.TestCase):
