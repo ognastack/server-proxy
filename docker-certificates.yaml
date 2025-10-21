@@ -14,8 +14,8 @@ services:
         certbot certonly \
           --authenticator dns-hetzner \
           --dns-hetzner-credentials /scripts/hetzner.ini \
-          -d "*.$DOMAIN" \
-          -d "$DOMAIN" \
+          -d "*.user.$DOMAIN" \
+          -d "user.$DOMAIN" \
           --email "$EMAIL" \
           --agree-tos \
           --non-interactive \
