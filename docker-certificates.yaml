@@ -13,6 +13,7 @@ services:
       - -c
       - |
         certbot certonly \
+          --debug \
           --authenticator dns-hetzner \
           --dns-hetzner-credentials /scripts/hetzner.ini \
           -d "*.${DOMAIN}" \
