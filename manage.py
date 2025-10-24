@@ -79,13 +79,11 @@ def up():
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, "up", "-d"], check=True)
 
 
-def up_prod():
+def up_certs():
     """
     Start docker compose services
     """
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-certificates.yaml', "up", "-d"], check=True)
-    #time.sleep(70)
-    #subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-compose.yaml', "up", "-d"], check=True)
 
 
 def down():
@@ -95,9 +93,9 @@ def down():
 
 class ComposeApp:
 
-    def __init__(self, action, domain, email, dns_api_token,renew):
+    def __init__(self, action, domain, email, dns_api_token,conf):
         self.action = action
-        self.renew = renew
+        self.conf = conf
         self.env_variables = {
             'POSTGRES_USER': "proxy_server_user",
             'POSTGRES_PASSWORD': generate_clear_password(),
@@ -132,14 +130,14 @@ class ComposeApp:
                 env_file.write("\n")
 
     def deploy(self):
-        if self.renew:
+        if self.conf:
             self.configure()
-        if self.action == "up":
+        elif self.action == "up":
             up()
         elif self.action == "down":
             down()
-        elif self.action == "up-prod":
-            up_prod()
+        elif self.action == "up-certs":
+            up_certs()
         else:
             print(f"Unknown command: {self.action}")
             print("Available commands: up, down")
@@ -154,7 +152,7 @@ if __name__ == "__main__":
         domain=args.get("domain"),
         email=args.get("email"),
         dns_api_token=args.get("dns_token"),
-        renew=args.get("renew")
+        conf=args.get("conf")
     )
 
     app.deploy()
