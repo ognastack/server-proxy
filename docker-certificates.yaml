@@ -8,15 +8,16 @@ services:
     volumes:
       - ./certs:/etc/letsencrypt
       - ./scripts:/scripts
+    entrypoint: /bin/sh
     command:
       - -c
       - |
         certbot certonly \
           --authenticator dns-hetzner \
           --dns-hetzner-credentials /scripts/hetzner.ini \
-          -d "*.$DOMAIN" \
-          -d "$DOMAIN" \
-          --email "$EMAIL" \
+          -d "*.${DOMAIN}" \
+          -d "${DOMAIN}" \
+          --email "${EMAIL}" \
           --agree-tos \
           --non-interactive \
           --keep-until-expiring
