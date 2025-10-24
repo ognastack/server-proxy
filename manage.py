@@ -84,8 +84,8 @@ def up_prod():
     Start docker compose services
     """
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-certificates.yaml', "up", "-d"], check=True)
-    time.sleep(70)
-    subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-compose.yaml', "up", "-d"], check=True)
+    #time.sleep(70)
+    #subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-compose.yaml', "up", "-d"], check=True)
 
 
 def down():
