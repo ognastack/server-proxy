@@ -79,12 +79,16 @@ def up():
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, "up", "-d"], check=True)
 
 
-def up_certs():
+def up_prod():
     """
     Start docker compose services
     """
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-certificates.yaml', "up", "-d"], check=True)
-
+    time.sleep(300)
+    subprocess.run(["chmod","-R" ,"755", "./certs"], check=True)
+    subprocess.run(["chmod","-R", "755", "/certs/live"], check=True)
+    subprocess.run(["chmod","-R", "755", "/certs/archive"], check=True)
+    subprocess.run(["docker", "compose", "-p", PROJECT_NAME, "up", "-d"], check=True)
 
 def down():
     """Stop docker compose services and remove volumes"""
@@ -93,7 +97,7 @@ def down():
 
 class ComposeApp:
 
-    def __init__(self, action, domain, email, dns_api_token,conf):
+    def __init__(self, action, domain, email,conf):
         self.action = action
         self.conf = conf
         self.env_variables = {
@@ -109,7 +113,6 @@ class ComposeApp:
             'KONG_LOG_LEVEL': "notice",
             'DOMAIN': domain,
             'EMAIL': email,
-            'HETZNER_API_TOKEN': dns_api_token
         }
 
         if self.action == 'up-prod':
@@ -136,8 +139,8 @@ class ComposeApp:
             up()
         elif self.action == "down":
             down()
-        elif self.action == "up-certs":
-            up_certs()
+        elif self.action == "up-prod":
+            up_prod()
         else:
             print(f"Unknown command: {self.action}")
             print("Available commands: up, down")
@@ -151,7 +154,6 @@ if __name__ == "__main__":
         action=args.get("action"),
         domain=args.get("domain"),
         email=args.get("email"),
-        dns_api_token=args.get("dns_token"),
         conf=args.get("conf")
     )
 

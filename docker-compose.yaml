@@ -57,7 +57,8 @@ services:
       - "443:8443"
     volumes:
       - ./config/kong.yaml:/kong/kong.yaml:ro
-      - ./certs/live/${DOMAIN}:/etc/letsencrypt/live/${DOMAIN}
+      - ./certs/live:/etc/letsencrypt/live
+      - ./certs/archive:/etc/letsencrypt/archive
     env_file:
       - .env
 
