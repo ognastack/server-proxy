@@ -1,10 +1,11 @@
+
 _format_version: "3.0"
 
 # Admin protection
 consumers:
   - username: admin
     keyauth_credentials:
-      - key: admin-key
+      - key: b05de7230d996ef08ccc7af18a079f88f031eaa8f2db1347b64758fbf6d852c8
 
 # Protect Kong's own Admin API via proxy
 services:
@@ -16,3 +17,4 @@ services:
           - /admin
     plugins:
       - name: key-auth
+
