@@ -57,8 +57,7 @@ services:
       - "443:8443"
     volumes:
       - ./config/kong.yaml:/kong/kong.yaml:ro
-      - ./certs/live:/etc/letsencrypt/live
-      - ./certs/archive:/etc/letsencrypt/archive
+      - letsencrypt:/etc/letsencrypt:ro # Mount the same volume as certbot
     env_file:
       - .env
 
@@ -104,6 +103,8 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
+  letsencrypt:
     driver: local
 
 networks:

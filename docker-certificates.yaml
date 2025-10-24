@@ -6,10 +6,9 @@ services:
     container_name: certbot
     restart: no
     volumes:
-      - ./certs:/etc/letsencrypt
+      - letsencrypt:/etc/letsencrypt # Use named volume for consistency
       - ./scripts:/scripts
-      - ./logs:/var/log/letsencrypt # Add this to see certbot logs
-    entrypoint: /bin/sh
+      - ./logs:/var/log/letsencrypt
     command:
       - -c
       - |
@@ -33,10 +32,14 @@ services:
       - ogna
     env_file:
       - .env
-    tty: true # Add this
-    stdin_open: true # Add this
+    tty: true
+    stdin_open: true
 
 networks:
   ogna:
     name: ogna
     driver: bridge
+
+volumes:
+  letsencrypt:
+    driver: local

@@ -84,10 +84,9 @@ def up_prod():
     Start docker compose services
     """
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-certificates.yaml', "up", "-d"], check=True)
-    time.sleep(300)
-    subprocess.run(["chmod","-R" ,"755", "./certs"], check=True)
-    subprocess.run(["chmod","-R", "755", "./certs/live"], check=True)
-    subprocess.run(["chmod","-R", "755", "./certs/archive"], check=True)
+    time.sleep(200)
+    subprocess.run(["chmod","-R" ,"755", "/etc/letsencrypt/live"], check=True)
+    subprocess.run(["chmod","-R", "755", "./etc/letsencrypt/archive"], check=True)
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, "up", "-d"], check=True)
 
 def down():
