@@ -5,7 +5,7 @@ _format_version: "3.0"
 consumers:
   - username: admin
     keyauth_credentials:
-      - key: b05de7230d996ef08ccc7af18a079f88f031eaa8f2db1347b64758fbf6d852c8
+      - key: 17c22bc007cc2a3d67ebeae3bc9846e57b7e101cb91bb36101e685e5d671bc5c
 
 # Protect Kong's own Admin API via proxy
 services:

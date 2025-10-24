@@ -83,7 +83,6 @@ def up_prod():
     """
     Start docker compose services
     """
-    print('docker prod')
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-certificates.yaml', "up", "-d"], check=True)
     time.sleep(70)
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-compose.yaml', "up", "-d"], check=True)
@@ -96,9 +95,9 @@ def down():
 
 class ComposeApp:
 
-    def __init__(self, action, domain, email, dns_api_token):
+    def __init__(self, action, domain, email, dns_api_token,renew):
         self.action = action
-
+        self.renew = renew
         self.env_variables = {
             'POSTGRES_USER': "proxy_server_user",
             'POSTGRES_PASSWORD': generate_clear_password(),
@@ -115,7 +114,7 @@ class ComposeApp:
             'HETZNER_API_TOKEN': dns_api_token
         }
 
-        if action == 'up-prod':
+        if self.action == 'up-prod':
             self.env_variables['KONG_SSL_CERT'] = f"/etc/letsencrypt/live/{domain}/fullchain.pem"
             self.env_variables['KONG_SSL_CERT_KEY'] = f"/etc/letsencrypt/live/{domain}/privkey.pem"
 
@@ -133,7 +132,8 @@ class ComposeApp:
                 env_file.write("\n")
 
     def deploy(self):
-        self.configure()
+        if self.renew:
+            self.configure()
         if self.action == "up":
             up()
         elif self.action == "down":
@@ -148,12 +148,13 @@ class ComposeApp:
 
 if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
-
+    print(args)
     app = ComposeApp(
         action=args.get("action"),
-        domain=args.get("domain", 'localhost'),
-        email=args.get("email", 'test@email.com'),
-        dns_api_token=args.get("dns_token", 'test@email.com')
+        domain=args.get("domain"),
+        email=args.get("email"),
+        dns_api_token=args.get("dns_token"),
+        renew=args.get("renew")
     )
 
     app.deploy()
