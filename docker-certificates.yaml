@@ -8,25 +8,34 @@ services:
     volumes:
       - ./certs:/etc/letsencrypt
       - ./scripts:/scripts
+      - ./logs:/var/log/letsencrypt # Add this to see certbot logs
     entrypoint: /bin/sh
     command:
       - -c
       - |
+        set -x
         certbot certonly \
-          --debug \
           --authenticator dns-hetzner \
           --dns-hetzner-credentials /scripts/hetzner.ini \
+          --dns-hetzner-propagation-seconds 120 \
           -d "*.${DOMAIN}" \
           -d "${DOMAIN}" \
           --email "${EMAIL}" \
           --agree-tos \
           --non-interactive \
-          --keep-until-expiring
-        trap exit TERM
+          --keep-until-expiring \
+          --logs-dir /var/log/letsencrypt \
+          2>&1 | tee /var/log/letsencrypt/certbot.log
+        exit_code=$${PIPESTATUS[0]}
+        echo "Certbot finished with exit code: $$exit_code"
+        exit $$exit_code
     networks:
       - ogna
     env_file:
       - .env
+    tty: true # Add this
+    stdin_open: true # Add this
+
 networks:
   ogna:
     name: ogna
