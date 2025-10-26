@@ -74,6 +74,7 @@ class ComposeApp:
                 env_file.write("\n")
 
     def deploy(self):
+        self.configure()
         if self.action == "up":
             up()
         elif self.action == "down":
