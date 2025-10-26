@@ -2,40 +2,15 @@
 import subprocess
 import sys
 import secrets
-import time
+import os
+import re
+from typing import Mapping, Optional
 
 PROJECT_NAME = "proxy_server"
-
-KONG_CONFIG = """
-_format_version: "3.0"
-
-# Admin protection
-consumers:
-  - username: admin
-    keyauth_credentials:
-      - key: ${ADMIN_API_KEY}
-
-# Protect Kong's own Admin API via proxy
-services:
-  - name: admin-api
-    url: http://kong-cp:8001
-    routes:
-      - name: admin-api-route
-        paths:
-          - /admin
-    plugins:
-      - name: key-auth
-
-"""
-
 
 def generate_clear_password():
     return secrets.token_hex(32)
 
-
-import os
-import re
-from typing import Mapping, Optional
 
 _env_pattern = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}")
 
@@ -78,17 +53,6 @@ def up():
     """Start docker compose services"""
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, "up", "-d"], check=True)
 
-
-def up_prod():
-    """
-    Start docker compose services
-    """
-    subprocess.run(["docker", "compose", "-p", PROJECT_NAME, '-f', 'docker-certificates.yaml', "up", "-d"], check=True)
-    time.sleep(200)
-    subprocess.run(["chmod","-R" ,"755", "/etc/letsencrypt/live"], check=True)
-    subprocess.run(["chmod","-R", "755", "./etc/letsencrypt/archive"], check=True)
-    subprocess.run(["docker", "compose", "-p", PROJECT_NAME, "up", "-d"], check=True)
-
 def down():
     """Stop docker compose services and remove volumes"""
     subprocess.run(["docker", "compose", "-p", PROJECT_NAME, "down", "-v"], check=True)
@@ -96,34 +60,12 @@ def down():
 
 class ComposeApp:
 
-    def __init__(self, action, domain, email,conf):
+    def __init__(self, action, email,dns_token):
         self.action = action
-        self.conf = conf
         self.env_variables = {
-            'POSTGRES_USER': "proxy_server_user",
-            'POSTGRES_PASSWORD': generate_clear_password(),
-            'POSTGRES_DB': "ogna_db",
-            'POSTGRES_NON_ROOT_USER': "proxy_server_user_no_root",
-            'POSTGRES_NON_ROOT_PASSWORD': generate_clear_password(),
-            'ENCRYPTION_KEY': generate_clear_password(),
-            'KONG_ADMIN_KEY': generate_clear_password(),
-            'KONG_PASSWORD': generate_clear_password(),
-            'ADMIN_API_KEY': generate_clear_password(),
-            'KONG_LOG_LEVEL': "notice",
-            'DOMAIN': domain,
             'EMAIL': email,
+            'HETZNER_API_KEY':dns_token
         }
-
-        if self.action == 'up-prod':
-            self.env_variables['KONG_SSL_CERT'] = f"/etc/letsencrypt/live/{domain}/fullchain.pem"
-            self.env_variables['KONG_SSL_CERT_KEY'] = f"/etc/letsencrypt/live/{domain}/privkey.pem"
-
-        path = 'config/kong.yaml'
-
-        new_config = replace_env_vars(text=KONG_CONFIG, env=self.env_variables)
-
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(new_config)
 
     def configure(self):
         with open('.env', 'w+') as env_file:
@@ -132,14 +74,10 @@ class ComposeApp:
                 env_file.write("\n")
 
     def deploy(self):
-        if self.conf:
-            self.configure()
-        elif self.action == "up":
+        if self.action == "up":
             up()
         elif self.action == "down":
             down()
-        elif self.action == "up-prod":
-            up_prod()
         else:
             print(f"Unknown command: {self.action}")
             print("Available commands: up, down")
@@ -151,9 +89,8 @@ if __name__ == "__main__":
     print(args)
     app = ComposeApp(
         action=args.get("action"),
-        domain=args.get("domain"),
         email=args.get("email"),
-        conf=args.get("conf")
+        dns_token=args.get("dns_token"),
     )
 
     app.deploy()
