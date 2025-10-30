@@ -30,6 +30,7 @@ services:
       - "./letsencrypt:/letsencrypt"
     networks:
       - ogna
+      - databases
 
 networks:
   ogna:
