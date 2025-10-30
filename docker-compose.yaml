@@ -35,3 +35,6 @@ networks:
   ogna:
     name: ogna
     driver: bridge
+  databases:
+    name: databases
+    driver: bridge
